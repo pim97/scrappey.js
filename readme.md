@@ -4,8 +4,8 @@ Introducing Scrappey, your comprehensive website scraping solution provided by S
 
 **Disclaimer: Please ensure that your web scraping activities comply with the website's terms of service and legal regulations. Scrappey is not responsible for any misuse or unethical use of the library. Use it responsibly and respect the website's policies.**
 
-Website: [https://scrappey.com/](https://scrappey.com/?via=martin)
-GitHub: [https://github.com/](https://github.com/DemonMartin/scrappey-wrapper)
+Website: [https://scrappey.com/](https://scrappey.com/)
+GitHub: [https://github.com/](https://github.com/pim97/scrappey.js)
 
 ## Topics
 
@@ -19,7 +19,7 @@ GitHub: [https://github.com/](https://github.com/DemonMartin/scrappey-wrapper)
 Use npm to install the Scrappey library. 💻
 
 ```shell
-npm install scrappey
+npm install scrappey-wrapper
 ```
 
 ## Usage
