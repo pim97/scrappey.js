@@ -1,3 +1,3 @@
-import Scrappey from "./wrapper/scrappey.js";
+const Scrappey = require("./wrapper/scrappey.js");
 
-export default Scrappey
+module.exports = Scrappey;

@@ -1,6 +1,6 @@
-import axios from "axios";
+const axios = require('axios').default;
 
-export default class Scrappey {
+class Scrappey {
 
     constructor(apiKey) {
         this.apiKey = apiKey;
@@ -70,7 +70,7 @@ export default class Scrappey {
      */
     async sendRequest(dataOptions) {
 
-        const { endpoint, data } = dataOptions;
+        const { endpoint } = dataOptions;
 
         if (!endpoint) {
             throw Error(`Endpoint is required, examples: request.get, request.post, sessions.create, sessions.destroy`)
@@ -109,3 +109,5 @@ export default class Scrappey {
 
 
 }
+
+module.exports = Scrappey;

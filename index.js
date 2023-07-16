@@ -1,4 +1,4 @@
-import Scrappey from "./wrapper/scrappey.js";
+const Scrappey = require("./wrapper/scrappey.js");
 
 const initialize = new Scrappey("API_KEY_HERE");
 
