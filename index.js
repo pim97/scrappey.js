@@ -64,6 +64,8 @@ async function run() {
     //To get the text from a JSON request, use innerText instead of response
     console.log(jsonPost.solution.innerText)
 
+    await initialize.destroySession(session)
+
 }
 
 run().then((data) => console.log(data)).catch((err) => console.error(err))
