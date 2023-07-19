@@ -27,9 +27,7 @@ class Scrappey {
     async destroySession(session) {
         return await this.sendRequest({
             endpoint: "sessions.destroy",
-            data: {
-                session: session
-            }
+            session: session
         })
     }
 
