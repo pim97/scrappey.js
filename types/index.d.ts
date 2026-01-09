@@ -71,6 +71,13 @@ type KeyboardValue =
 type LoadState = 'domcontentloaded' | 'networkidle' | 'load';
 
 /**
+ * Request type mode
+ * - 'browser': Headless browser (default) - more features, JS rendering, browser actions. Cost: 1 + 0.2 balance per request
+ * - 'request': HTTP library with TLS - faster and cheaper. Cost: 0.2 balance per request
+ */
+type RequestType = 'browser' | 'request';
+
+/**
  * Browser action definition
  */
 interface BrowserAction {
@@ -162,6 +169,8 @@ interface BrowserSpec {
 interface RequestOptions {
     /** Target URL to scrape */
     url: string;
+    /** Request mode: 'browser' (headless, default) or 'request' (HTTP, faster/cheaper) */
+    requestType?: RequestType;
     /** Session ID for session reuse */
     session?: string;
     /** Proxy string (http://user:pass@ip:port) */

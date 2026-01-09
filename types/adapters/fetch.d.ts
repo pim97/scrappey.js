@@ -8,6 +8,8 @@
 interface ScrappeyFetchOptions extends RequestInit {
     /** Scrappey API key (if not set in defaults) */
     apiKey?: string;
+    /** Request mode: 'browser' (headless, default) or 'request' (HTTP, faster/cheaper) */
+    requestType?: 'browser' | 'request';
     /** Session ID for session reuse */
     session?: string;
     /** Proxy country */

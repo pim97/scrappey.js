@@ -35,6 +35,7 @@ const axios = require('axios').default;
 /**
  * @typedef {Object} RequestOptions
  * @property {string} url - The target URL to scrape
+ * @property {'browser'|'request'} [requestType='browser'] - Request mode: 'browser' (headless browser, more features, 1+0.2 balance) or 'request' (HTTP with TLS, faster, 0.2 balance)
  * @property {string} [session] - Session ID for session reuse
  * @property {string} [proxy] - Proxy string (http://user:pass@ip:port)
  * @property {string} [proxyCountry] - Request proxy from specific country

@@ -59,7 +59,7 @@ function mapAxiosConfigToScrappey(config = {}) {
 
     // Scrappey-specific options (passed through)
     const scrappeySpecificOptions = [
-        'session', 'proxyCountry', 'noProxy', 'premiumProxy', 'mobileProxy',
+        'requestType', 'session', 'proxyCountry', 'noProxy', 'premiumProxy', 'mobileProxy',
         'cloudflareBypass', 'datadomeBypass', 'kasadaBypass', 'disableAntiBot',
         'automaticallySolveCaptchas', 'alwaysLoad', 'browserActions',
         'cssSelector', 'includeImages', 'includeLinks', 'screenshot',

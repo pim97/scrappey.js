@@ -1,6 +1,6 @@
 {
   "name": "scrappey-wrapper",
-  "version": "2.0.5",
+  "version": "2.1.0",
   "description": "Official Node.js wrapper for the Scrappey web scraping API. Bypass Cloudflare, Datadome, PerimeterX, and other antibot protections. Solve captchas automatically.",
   "main": "index.js",
   "types": "types/index.d.ts",

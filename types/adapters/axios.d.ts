@@ -10,6 +10,8 @@ import { AxiosRequestConfig, AxiosResponse, AxiosInstance } from 'axios';
 interface ScrappeyAxiosRequestConfig extends AxiosRequestConfig {
     /** Scrappey API key (if not set in defaults) */
     apiKey?: string;
+    /** Request mode: 'browser' (headless, default) or 'request' (HTTP, faster/cheaper) */
+    requestType?: 'browser' | 'request';
     /** Session ID for session reuse */
     session?: string;
     /** Proxy country */

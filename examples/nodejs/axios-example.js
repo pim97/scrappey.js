@@ -54,6 +54,26 @@ async function postExample() {
     console.log('Response:', response.data);
 }
 
+async function requestTypeExample() {
+    console.log('\n=== Request Type Modes ===\n');
+
+    // Fast mode using HTTP library (cheaper, faster)
+    console.log('Using REQUEST mode (HTTP) - 5x cheaper:');
+    const fastResponse = await axios.get('https://httpbin.rs/get', {
+        requestType: 'request' // Use HTTP mode
+    });
+    console.log('Status:', fastResponse.status);
+    console.log('Cost: 0.2 balance\n');
+
+    // Browser mode (default) - for complex pages
+    console.log('Using BROWSER mode (Headless):');
+    const browserResponse = await axios.get('https://example.com', {
+        requestType: 'browser' // Default - can be omitted
+    });
+    console.log('Status:', browserResponse.status);
+    console.log('Cost: 1 + 0.2 balance');
+}
+
 async function sessionExample() {
     console.log('\n=== Session Management ===\n');
 
@@ -126,6 +146,7 @@ async function main() {
     try {
         await basicExample();
         await postExample();
+        await requestTypeExample();
         await sessionExample();
         await jsonResponseExample();
         await customInstanceExample();

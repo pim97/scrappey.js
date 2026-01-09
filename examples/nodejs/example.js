@@ -52,6 +52,37 @@ async function postExample() {
 }
 
 /**
+ * Request Type example - Browser vs Request mode
+ * 
+ * - 'browser' (default): Headless browser, more features, 1+0.2 balance/request
+ * - 'request': HTTP with TLS, faster and cheaper, 0.2 balance/request
+ */
+async function requestTypeExample() {
+    console.log('\n=== Request Type Modes ===\n');
+
+    // Fast mode using HTTP library (cheaper, faster)
+    console.log('Using REQUEST mode (HTTP):');
+    const fastResponse = await scrappey.get({
+        url: 'https://httpbin.rs/get',
+        requestType: 'request' // Use HTTP mode - 5x cheaper!
+    });
+    console.log('Status:', fastResponse.data);
+    console.log('Cost: 0.2 balance\n');
+
+    // Browser mode (default) - for complex pages
+    console.log('Using BROWSER mode (Headless):');
+    const browserResponse = await scrappey.get({
+        url: 'https://example.com',
+        requestType: 'browser', // Default - can be omitted
+        browserActions: [
+            { type: 'wait', wait: 500 }
+        ]
+    });
+    console.log('Status:', browserResponse.data);
+    console.log('Cost: 1 + 0.2 balance');
+}
+
+/**
  * Session management example
  */
 async function sessionExample() {
@@ -192,6 +223,7 @@ async function main() {
     try {
         await basicGetExample();
         await postExample();
+        await requestTypeExample();
         await sessionExample();
         await browserActionsExample();
         await dataExtractionExample();

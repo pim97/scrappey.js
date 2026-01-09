@@ -75,7 +75,7 @@ function mapFetchOptionsToScrappey(options = {}) {
 
     // Scrappey-specific options (passed through)
     const scrappeySpecificOptions = [
-        'apiKey', 'session', 'proxyCountry', 'noProxy', 'premiumProxy', 'mobileProxy',
+        'requestType', 'apiKey', 'session', 'proxyCountry', 'noProxy', 'premiumProxy', 'mobileProxy',
         'cloudflareBypass', 'datadomeBypass', 'kasadaBypass', 'disableAntiBot',
         'automaticallySolveCaptchas', 'alwaysLoad', 'browserActions',
         'cssSelector', 'includeImages', 'includeLinks', 'screenshot',

@@ -16,6 +16,92 @@ The official Node.js wrapper for the [Scrappey](https://scrappey.com) web scrapi
 - **Screenshots & Video**: Capture screenshots and record browser sessions
 - **TypeScript Support**: Full TypeScript declarations included
 
+## Pricing Comparison
+
+Compare Scrappey with other web scraping services:
+
+| Features | Scrappey | ZenRows | ScrapingBee | Scrapfly |
+|----------|----------|---------|-------------|----------|
+| **Price per 1K Scrapes**<br/>(JS Render + Residential Proxies) | **€1** | $25 | $25 | $187 |
+| **Concurrent Requests**<br/>(Simultaneous scraping) | **200** | 10 | 5 | 5 |
+| **Browser Automation**<br/>(Actions and interactions) | **30+ Actions** | Basic | Basic | Basic |
+| **Billing Model**<br/>(Payment flexibility) | **Pay-as-you-go** | Monthly | Monthly | Monthly |
+| **Success Rate**<br/>(Successful scrapes) | **95%** | 95% | 95% | 95% |
+
+**Why Scrappey?**
+- **25x cheaper** than competitors for JS rendering with residential proxies
+- **20x more concurrent requests** for faster scraping
+- **Most advanced browser automation** with 30+ actions
+- **Flexible billing** - pay only for what you use, no monthly commitments
+- **Same high success rate** as premium competitors
+
+## How It Works
+
+Scrappey provides a powerful web scraping API that handles all the complexity of bypassing antibot systems, solving captchas, and managing browser sessions. Here's how it works:
+
+```mermaid
+flowchart TB
+    subgraph YourApp[Your Application]
+        Code[Your Code]
+        Wrapper[Scrappey Wrapper]
+    end
+    
+    subgraph ScrappeyAPI[Scrappey API]
+        RequestHandler[Request Handler]
+        AntibotBypass[Antibot Bypass Engine]
+        CaptchaSolver[Captcha Solver]
+        BrowserEngine[Browser Engine]
+        ProxyManager[Proxy Manager]
+    end
+    
+    subgraph TargetSite[Target Website]
+        Cloudflare[Cloudflare Protection]
+        Datadome[Datadome Protection]
+        Captcha[CAPTCHA Challenge]
+        Website[Website Content]
+    end
+    
+    Code -->|1. Send Request| Wrapper
+    Wrapper -->|2. API Request| RequestHandler
+    
+    RequestHandler -->|3. Route Request| AntibotBypass
+    AntibotBypass -->|4. Bypass Protection| Cloudflare
+    AntibotBypass -->|4. Bypass Protection| Datadome
+    
+    RequestHandler -->|5. Handle Captcha| CaptchaSolver
+    CaptchaSolver -->|6. Solve Automatically| Captcha
+    
+    RequestHandler -->|7. Execute| BrowserEngine
+    BrowserEngine -->|8. Use Proxy| ProxyManager
+    ProxyManager -->|9. Residential IP| Website
+    
+    Website -->|10. Return Content| BrowserEngine
+    BrowserEngine -->|11. Process Response| RequestHandler
+    RequestHandler -->|12. Return Data| Wrapper
+    Wrapper -->|13. Formatted Response| Code
+```
+
+### Request Flow
+
+1. **Your Code** → Send request through Scrappey wrapper
+2. **Scrappey API** → Receives and processes your request
+3. **Antibot Bypass** → Automatically bypasses Cloudflare, Datadome, PerimeterX, etc.
+4. **Captcha Solver** → Detects and solves CAPTCHAs automatically
+5. **Browser Engine** → Executes browser actions if needed (click, type, scroll)
+6. **Proxy Manager** → Routes through residential proxies for anonymity
+7. **Target Website** → Returns content successfully
+8. **Response** → Formatted data returned to your application
+
+### Use Cases
+
+- **E-commerce Scraping**: Product data, prices, reviews
+- **Social Media**: Profile data, posts, engagement metrics
+- **Search Engines**: SERP data, rankings
+- **Real Estate**: Property listings, prices, details
+- **News & Content**: Articles, headlines, metadata
+- **API Testing**: Test your own APIs with different IPs
+- **Data Aggregation**: Collect data from multiple sources
+
 ## Installation
 
 ```bash
@@ -37,6 +123,53 @@ const response = await scrappey.get({
 console.log(response.solution.response); // HTML content
 console.log(response.solution.statusCode); // 200
 ```
+
+## Request Modes
+
+Scrappey supports two request modes to optimize for your use case:
+
+| Mode | Description | Cost | Best For |
+|------|-------------|------|----------|
+| `browser` | Headless browser (default) | 1 + 0.2 balance/request | Complex pages, JS rendering, browser actions, antibot bypass |
+| `request` | HTTP library with TLS | 0.2 balance/request | Simple requests, speed-critical, cost-sensitive applications |
+
+### Using Browser Mode (Default)
+
+Browser mode uses a real headless browser, enabling full JavaScript execution, browser actions, and advanced antibot bypass:
+
+```javascript
+const response = await scrappey.get({
+    url: 'https://example.com',
+    requestType: 'browser', // Default - can be omitted
+    browserActions: [
+        { type: 'click', cssSelector: '#button' },
+        { type: 'wait', wait: 1000 }
+    ]
+});
+```
+
+### Using Request Mode (Faster & Cheaper)
+
+Request mode uses an HTTP library with TLS fingerprinting - much faster and cheaper for simple requests:
+
+```javascript
+const response = await scrappey.get({
+    url: 'https://api.example.com/data',
+    requestType: 'request' // Use HTTP mode - 5x cheaper!
+});
+```
+
+**When to use `request` mode:**
+- API calls and JSON endpoints
+- Simple HTML pages without heavy JavaScript
+- High-volume scraping where cost matters
+- Speed-critical applications
+
+**When to use `browser` mode:**
+- Sites with JavaScript-rendered content
+- Complex antibot systems (Cloudflare, Datadome, etc.)
+- When you need browser actions (click, type, scroll)
+- CAPTCHA solving
 
 ## Drop-in Replacement for Axios/Fetch
 
