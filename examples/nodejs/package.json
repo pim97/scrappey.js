@@ -2,6 +2,7 @@
   "name": "scrappey-nodejs-example",
   "version": "1.0.0",
   "description": "Scrappey Node.js example",
+  "type": "module",
   "main": "example.js",
   "scripts": {
     "start": "node example.js"
