@@ -2,7 +2,7 @@
 
 The official Node.js wrapper for the [Scrappey](https://scrappey.com) web scraping API. Bypass Cloudflare, Datadome, PerimeterX, and other antibot protections. Solve captchas automatically.
 
-[![npm version](https://badge.fury.io/js/%40scrappey%2Fapi.svg)](https://www.npmjs.com/package/@scrappey/api)
+[![npm version](https://badge.fury.io/js/scrappey-wrapper.svg)](https://www.npmjs.com/package/scrappey-wrapper)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Features
@@ -19,13 +19,13 @@ The official Node.js wrapper for the [Scrappey](https://scrappey.com) web scrapi
 ## Installation
 
 ```bash
-npm install @scrappey/api
+npm install scrappey-wrapper
 ```
 
 ## Quick Start
 
 ```javascript
-const Scrappey = require('@scrappey/api');
+const Scrappey = require('scrappey-wrapper');
 
 const scrappey = new Scrappey('YOUR_API_KEY');
 
@@ -52,7 +52,7 @@ import axios from 'axios';
 const response = await axios.get('https://example.com');
 
 // After - just change the import!
-import axios from '@scrappey/api/axios';
+import axios from 'scrappey-wrapper/axios';
 axios.defaults.apiKey = 'YOUR_API_KEY';
 const response = await axios.get('https://example.com');
 // Automatically bypasses Cloudflare, solves captchas, etc.
@@ -60,7 +60,7 @@ const response = await axios.get('https://example.com');
 
 **All axios methods work:**
 ```javascript
-import axios from '@scrappey/api/axios';
+import axios from 'scrappey-wrapper/axios';
 
 axios.defaults.apiKey = 'YOUR_API_KEY';
 
@@ -114,7 +114,7 @@ const response = await fetch('https://example.com');
 const data = await response.json();
 
 // After
-import fetch from '@scrappey/api/fetch';
+import fetch from 'scrappey-wrapper/fetch';
 fetch.configure({ apiKey: 'YOUR_API_KEY' });
 
 const response = await fetch('https://example.com', {
@@ -125,7 +125,7 @@ const data = await response.json();
 
 **All fetch methods work:**
 ```javascript
-import fetch from '@scrappey/api/fetch';
+import fetch from 'scrappey-wrapper/fetch';
 
 fetch.configure({ apiKey: 'YOUR_API_KEY' });
 
@@ -164,7 +164,7 @@ const arrayBuffer = await response.arrayBuffer();
 
 **Axios:**
 ```javascript
-import axios from '@scrappey/api/axios';
+import axios from 'scrappey-wrapper/axios';
 
 // Set defaults
 axios.defaults.apiKey = 'YOUR_API_KEY';
@@ -182,7 +182,7 @@ const scrappeyAxios = axios.create({
 
 **Fetch:**
 ```javascript
-import fetch from '@scrappey/api/fetch';
+import fetch from 'scrappey-wrapper/fetch';
 
 // Configure globally
 fetch.configure({
@@ -217,7 +217,7 @@ Both adapters support Scrappey session management:
 
 ```javascript
 // Axios
-import axios from '@scrappey/api/axios';
+import axios from 'scrappey-wrapper/axios';
 axios.defaults.apiKey = 'YOUR_API_KEY';
 
 const session = await axios.createSession();
@@ -227,7 +227,7 @@ await axios.get('https://example.com', { session: sessionId });
 await axios.destroySession(sessionId);
 
 // Fetch
-import fetch from '@scrappey/api/fetch';
+import fetch from 'scrappey-wrapper/fetch';
 fetch.configure({ apiKey: 'YOUR_API_KEY' });
 
 const session = await fetch.createSession();
