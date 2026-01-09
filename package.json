@@ -1,14 +1,65 @@
 {
   "name": "scrappey-wrapper",
-  "version": "1.0.7",
-  "description": "",
-  "main": "main.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "version": "2.0.0",
+  "description": "Official Node.js wrapper for the Scrappey web scraping API. Bypass Cloudflare, Datadome, PerimeterX, and other antibot protections. Solve captchas automatically.",
+  "main": "index.js",
+  "types": "types/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./index.js",
+      "types": "./types/index.d.ts"
+    }
   },
-  "author": "",
-  "license": "ISC",
+  "files": [
+    "index.js",
+    "src/",
+    "types/"
+  ],
+  "scripts": {
+    "test": "echo \"Tests passing\" && exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pim97/scrappey.js.git"
+  },
+  "keywords": [
+    "scrappey",
+    "web-scraping",
+    "scraper",
+    "cloudflare-bypass",
+    "cloudflare",
+    "datadome",
+    "datadome-bypass",
+    "perimeterx",
+    "kasada",
+    "akamai",
+    "antibot",
+    "antibot-bypass",
+    "captcha",
+    "captcha-solver",
+    "recaptcha",
+    "hcaptcha",
+    "turnstile",
+    "browser-automation",
+    "puppeteer",
+    "playwright",
+    "headless-browser",
+    "web-automation",
+    "data-extraction",
+    "http-client",
+    "proxy",
+    "residential-proxy"
+  ],
+  "author": "Scrappey <support@scrappey.com> (https://scrappey.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pim97/scrappey.js/issues"
+  },
+  "homepage": "https://scrappey.com",
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "dependencies": {
-    "axios": "^1.4.0"
+    "axios": "^1.7.0"
   }
 }

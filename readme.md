@@ -1,195 +1,389 @@
- # 🤖 Scrappey Wrapper - Data Extraction Made Easy                                          
- 
- 
-Introducing Scrappey, your comprehensive website scraping solution provided by Scrappey.com. With Scrappey's powerful and user-friendly API, you can effortlessly retrieve data from websites, including those protected by Cloudflare/Datadome. Join Scrappey today and revolutionize your data extraction process. 🚀 Now with caching!          
+# Scrappey - Web Scraping API Wrapper
 
-**Disclaimer: Please ensure that your web scraping activities comply with the website's terms of service and legal regulations. Scrappey is not responsible for any misuse or unethical use of the library. Use it responsibly and respect the website's policies.**   
+The official Node.js wrapper for the [Scrappey](https://scrappey.com) web scraping API. Bypass Cloudflare, Datadome, PerimeterX, and other antibot protections. Solve captchas automatically.
 
-Website: [https://scrappey.com/](https://scrappey.com/)
-GitHub: [https://github.com/](https://github.com/pim97/scrappey.js)
+[![npm version](https://badge.fury.io/js/scrappey-wrapper.svg)](https://www.npmjs.com/package/scrappey-wrapper)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## Topics
+## Features
 
-- [Installation](#installation)
-- [Usage](#usage)
-- [Example](#example)
-- [License](#license)
+- **Antibot Bypass**: Cloudflare, Datadome, PerimeterX, Kasada, Akamai, and more
+- **Captcha Solving**: reCAPTCHA, hCaptcha, Turnstile, FunCaptcha automatic solving
+- **Browser Automation**: Full browser actions (click, type, scroll, execute JS)
+- **Session Management**: Persistent sessions with cookie and state management
+- **All HTTP Methods**: GET, POST, PUT, DELETE, PATCH support
+- **Proxy Support**: Built-in residential proxies with country selection
+- **Screenshots & Video**: Capture screenshots and record browser sessions
+- **TypeScript Support**: Full TypeScript declarations included
 
 ## Installation
 
-Use npm to install the Scrappey library. 💻
-
-```shell
+```bash
 npm install scrappey-wrapper
 ```
 
-## Usage
-
-Require the Scrappey library in your code. 📦
+## Quick Start
 
 ```javascript
 const Scrappey = require('scrappey-wrapper');
+
+const scrappey = new Scrappey('YOUR_API_KEY');
+
+// Basic GET request
+const response = await scrappey.get({
+    url: 'https://example.com'
+});
+
+console.log(response.solution.response); // HTML content
+console.log(response.solution.statusCode); // 200
 ```
 
-Create an instance of Scrappey by providing your Scrappey API key. 🔑
+## API Reference
+
+### Constructor
 
 ```javascript
-const apiKey = 'YOUR_API_KEY';
-const scrappey = new Scrappey(apiKey);
+const scrappey = new Scrappey(apiKey, options);
 ```
 
-### Example
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `apiKey` | `string` | Your Scrappey API key (required) |
+| `options.baseUrl` | `string` | Custom API base URL (optional) |
+| `options.timeout` | `number` | Default timeout in ms (default: 300000) |
 
-Here's an example of how Scrappey works. 🚀 This is an example using our development environment. Example is shown in Firefox, Chrome is also supported.
+### HTTP Methods
 
-![](https://i.gyazo.com/36de841eb39edc9bb60f40c28a854d32.gif)
+#### GET Request
 
 ```javascript
+const response = await scrappey.get({
+    url: 'https://example.com',
+    session: 'optional-session-id',
+    // ... other options
+});
+```
 
-import Scrappey from "scrappey-wrapper";
+#### POST Request
 
-const initialize = new Scrappey("API_KEY_HERE");
+```javascript
+const response = await scrappey.post({
+    url: 'https://api.example.com/submit',
+    postData: {
+        name: 'John Doe',
+        email: 'john@example.com'
+    },
+    customHeaders: {
+        'content-type': 'application/json'
+    }
+});
+```
 
-async function run() {
-    //Creates a session, this allows you to send multiple requests with the same browser tab open
-    //You can also choose to not create a session for temporary one time requests
-    //Setting a session string and proxy is optional, we automatically use our own residential proxies for you
-    //This is included in the request price
-    const createSession = await initialize.createSession({
-        "session": "test",
-        //"proxy": "http://username:password@ip:port"
-    })
+#### PUT, DELETE, PATCH
 
-    //The unique session id that is used to identify the request for future use
-    // (the browser tab is kept open for 4 minutes)
-    const session = createSession.session
+```javascript
+await scrappey.put({ url, postData, ...options });
+await scrappey.delete({ url, ...options });
+await scrappey.patch({ url, postData, ...options });
+```
 
-    //The fingerprint that is used to identify the session
-    //This includes information like the user-agent, screen or language used
-    const fingerprint = createSession.fingerprint
+### Session Management
 
-    console.log(`Found session ${session}`)
+```javascript
+// Create a session
+const session = await scrappey.createSession({
+    proxyCountry: 'UnitedStates',
+    // proxy: 'http://user:pass@ip:port'
+});
+const sessionId = session.session;
 
-    //Don't know what data to use in the request? Check out our Request Builder
-    //https://app.scrappey.com/#/builder
-    //It will auotmatically generate the data for you with the input you provided
-    const get = await initialize.get({
-        session: session,
-        url: 'https://httpbin.rs/get'
-    })
+// Use the session
+await scrappey.get({
+    url: 'https://example.com',
+    session: sessionId
+});
 
-    //Only successfull requests will take balance from your account
-    //This can verified by looking at the solution verified field
-    console.log(`Request was successful and took balance: ${get.solution.verified}`)
+// Check if session is active
+const status = await scrappey.isSessionActive(sessionId);
 
-    //To only get the text from a response use get.solution.innerText
-    //To also get all the HTML elements, use get.solution.response
-    const responseData = get.solution.response
-    console.log(`Found response`, responseData)
+// List all sessions
+const sessions = await scrappey.listSessions(userId);
 
-    //Sending a POST with a=b&c=b data format
-    const post = await initialize.post({
-        session: session,
-        url: 'https://httpbin.rs/post',
-        postData: "test=test&test2=test2",
-    })
+// Destroy session when done
+await scrappey.destroySession(sessionId);
+```
 
-    //Sending a post with JSON data
-    const jsonPost = await initialize.post({
-        session: session,
-        url: 'https://backend.scrappey.com/api/auth/login',
-        customHeaders: {
-            //HTTP1 is uppercase headers
-            //HTTP2 is lowercase headers
-            "content-type": "application/json"
+### Browser Actions
+
+Execute browser automation actions:
+
+```javascript
+const response = await scrappey.get({
+    url: 'https://example.com/login',
+    browserActions: [
+        {
+            type: 'wait_for_selector',
+            cssSelector: '#login-form'
         },
-        postData: JSON.stringify({
-            email: "testtest@test.nl",
-            password: "password",
-        })
-    })
+        {
+            type: 'type',
+            cssSelector: '#username',
+            text: 'myuser'
+        },
+        {
+            type: 'type',
+            cssSelector: '#password',
+            text: 'mypassword'
+        },
+        {
+            type: 'click',
+            cssSelector: '#submit',
+            waitForSelector: '.dashboard'
+        },
+        {
+            type: 'execute_js',
+            code: 'document.querySelector(".user-info").innerText'
+        }
+    ]
+});
 
-    //To get the text from a JSON request, use innerText instead of response
-    console.log(jsonPost.solution.innerText)
-
-    await initialize.destroySession(session)
-
-}
-
-run().then((data) => console.log(data)).catch((err) => console.error(err))
-
-/**
- * Looking for more examples? Check out our examples below
- * 
- * Cookiejar example with custom cookies and headers
- * and using AI parse to get data from a website
- * 
- * {
-  "cmd": "request.get",
-  "url": "https://httpbin.rs/get",
-  "customHeaders": {
-    "auth": "test"
-  },
-  "cookiejar": [
-    {
-      "key": "cookiekey",
-      "value": "cookievalue",
-      "domain": "httpbin.rs",
-      "path": "/"
-    }
-  ],
-  "session": "86908d12-b225-446c-bb16-dc5c283e1d59",
-  "autoparse": true,
-  "properties": "parse using ai, product name",
-  "proxy": "http://proxystring"
-}
- *
-
-Post example with cookiejar and custom headers
-If you use a session, cookies are kept within the browser, then it's not needed
-to add a cookiejar
-
-{
-  "cmd": "request.post",
-  "url": "https://httpbin.rs/post",
-  "postData": "{\"happy\":\"true}",
-  "customHeaders": {
-    "content-type": "application/json",
-    "auth": "test"
-  },
-  "cookiejar": [
-    {
-      "key": "cookiekey",
-      "value": "cookievalue",
-      "domain": "httpbin.rs",
-      "path": "/"
-    }
-  ],
-  "session": "86908d12-b225-446c-bb16-dc5c283e1d59",
-  "autoparse": true,
-  "properties": "parse using ai, product name",
-  "proxy": "http://proxystring"
-}
- * 
- * 
- */
-
+// Access JS execution results
+console.log(response.solution.javascriptReturn[0]);
 ```
 
-**Scrappey Wrapper Features:**
+#### Available Actions
 
-- Easy session management with session creation and destruction
-- Support for GET and POST requests
-- Support for both FormData and JSON data formats
-- Customizable headers for requests
-- Robust and user-friendly
+| Action | Description |
+|--------|-------------|
+| `click` | Click on an element |
+| `type` | Type text into an input |
+| `goto` | Navigate to a URL |
+| `wait` | Wait for milliseconds |
+| `wait_for_selector` | Wait for element to appear |
+| `wait_for_function` | Wait for JS condition |
+| `wait_for_load_state` | Wait for page load state |
+| `wait_for_cookie` | Wait for cookie to be set |
+| `execute_js` | Execute JavaScript |
+| `scroll` | Scroll to element or bottom |
+| `hover` | Hover over element |
+| `keyboard` | Press keyboard keys |
+| `dropdown` | Select dropdown option |
+| `switch_iframe` | Switch to iframe context |
+| `set_viewport` | Set viewport size |
+| `if` | Conditional actions |
+| `while` | Loop actions |
+| `solve_captcha` | Solve captcha |
 
-For more information, please visit the [official Scrappey documentation](https://wiki.scrappey.com/getting-started). 📚
+### Antibot Bypass
+
+```javascript
+const response = await scrappey.get({
+    url: 'https://protected-site.com',
+    cloudflareBypass: true,
+    datadomeBypass: true,
+    kasadaBypass: true,
+    premiumProxy: true,
+    proxyCountry: 'UnitedStates'
+});
+```
+
+### Captcha Solving
+
+```javascript
+// Automatic captcha solving
+const response = await scrappey.get({
+    url: 'https://example.com',
+    automaticallySolveCaptchas: true,
+    alwaysLoad: ['recaptcha', 'hcaptcha', 'turnstile']
+});
+
+// Manual captcha solving with browser action
+const response = await scrappey.get({
+    url: 'https://example.com',
+    browserActions: [
+        {
+            type: 'solve_captcha',
+            captcha: 'turnstile',
+            captchaData: {
+                sitekey: '0x4AAAAAAA...',
+                cssSelector: '.cf-turnstile'
+            }
+        }
+    ]
+});
+```
+
+### Screenshots & Video
+
+```javascript
+const response = await scrappey.get({
+    url: 'https://example.com',
+    screenshot: true,
+    screenshotWidth: 1920,
+    screenshotHeight: 1080,
+    video: true
+});
+
+// Base64 screenshot
+const screenshot = response.solution.screenshot;
+
+// Video URL
+const videoUrl = response.solution.videoUrl;
+```
+
+### Data Extraction
+
+```javascript
+const response = await scrappey.get({
+    url: 'https://example.com',
+    cssSelector: '.product-title',
+    innerText: true,
+    includeLinks: true,
+    includeImages: true,
+    regex: 'price: \\$([0-9.]+)'
+});
+```
+
+### Request Interception
+
+```javascript
+const response = await scrappey.get({
+    url: 'https://example.com',
+    interceptFetchRequest: '/api/data',
+    abortOnDetection: ['analytics', 'tracking', 'ads'],
+    whitelistedDomains: ['example.com', 'cdn.example.com'],
+    blackListedDomains: ['ads.com']
+});
+
+// Intercepted data
+console.log(response.solution.interceptFetchRequestResponse);
+```
+
+## Configuration Options
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `url` | `string` | Target URL (required) |
+| `session` | `string` | Session ID for session reuse |
+| `proxy` | `string` | Proxy string (http://user:pass@ip:port) |
+| `proxyCountry` | `string` | Proxy country (e.g., "UnitedStates") |
+| `premiumProxy` | `boolean` | Use premium proxy pool |
+| `mobileProxy` | `boolean` | Use mobile proxy pool |
+| `postData` | `object/string` | POST/PUT/PATCH request data |
+| `customHeaders` | `object` | Custom HTTP headers |
+| `cookies` | `string` | Cookie string to set |
+| `cookiejar` | `array` | Cookie jar array |
+| `localStorage` | `object` | LocalStorage data to set |
+| `browserActions` | `array` | Browser actions to execute |
+| `cloudflareBypass` | `boolean` | Enable Cloudflare bypass |
+| `datadomeBypass` | `boolean` | Enable Datadome bypass |
+| `kasadaBypass` | `boolean` | Enable Kasada bypass |
+| `automaticallySolveCaptchas` | `boolean` | Auto-solve captchas |
+| `alwaysLoad` | `array` | Captcha types to always load |
+| `cssSelector` | `string` | Extract content by CSS selector |
+| `innerText` | `boolean` | Include page text content |
+| `includeLinks` | `boolean` | Include all page links |
+| `includeImages` | `boolean` | Include all page images |
+| `screenshot` | `boolean` | Capture screenshot |
+| `video` | `boolean` | Record video |
+| `pdf` | `boolean` | Generate PDF |
+| `filter` | `array` | Filter response fields |
+| `timeout` | `number` | Request timeout (ms) |
+| `retries` | `number` | Retry attempts |
+
+## Response Structure
+
+```javascript
+{
+    solution: {
+        verified: true,           // Request verification status
+        response: '<html>...',    // HTML content
+        statusCode: 200,          // HTTP status code
+        currentUrl: 'https://...', // Final URL after redirects
+        userAgent: 'Mozilla/5.0...', // User agent used
+        cookies: [...],           // Array of cookies
+        cookieString: '...',      // Cookie string
+        responseHeaders: {...},   // Response headers
+        innerText: '...',         // Page text content
+        screenshot: 'base64...',  // Base64 screenshot
+        screenshotUrl: 'https://...', // Screenshot URL
+        videoUrl: 'https://...',  // Video URL
+        javascriptReturn: [...],  // JS execution results
+    },
+    timeElapsed: 1234,           // Request time (ms)
+    data: 'success',             // 'success' or 'error'
+    session: 'session-id',       // Session ID
+    error: '...',                // Error message (if failed)
+}
+```
+
+## Error Handling
+
+```javascript
+try {
+    const response = await scrappey.get({ url: 'https://example.com' });
+    
+    if (response.data === 'error') {
+        console.error('Error:', response.error);
+        // Handle specific error codes
+        // See: https://wiki.scrappey.com/getting-started
+    }
+} catch (error) {
+    // Network or request error
+    console.error('Request failed:', error.message);
+}
+```
+
+## Examples
+
+Multi-language examples are available in the [examples](./examples) directory:
+
+- **Node.js**: [examples/nodejs](./examples/nodejs)
+- **TypeScript**: [examples/typescript](./examples/typescript)
+- **Python**: [examples/python](./examples/python)
+- **Go**: [examples/go](./examples/go)
+- **C#**: [examples/csharp](./examples/csharp)
+- **PHP**: [examples/php](./examples/php)
+- **Java**: [examples/java](./examples/java)
+- **Ruby**: [examples/ruby](./examples/ruby)
+- **Rust**: [examples/rust](./examples/rust)
+- **cURL**: [examples/curl](./examples/curl)
+
+## TypeScript
+
+Full TypeScript support is included:
+
+```typescript
+import Scrappey = require('scrappey-wrapper');
+
+const scrappey = new Scrappey('API_KEY');
+
+const response = await scrappey.get({
+    url: 'https://example.com',
+    browserActions: [
+        {
+            type: 'execute_js',
+            code: 'document.title'
+        }
+    ]
+});
+
+// Fully typed response
+console.log(response.solution.statusCode);
+```
+
+## Links
+
+- **Website**: [https://scrappey.com](https://scrappey.com)
+- **Documentation**: [https://wiki.scrappey.com](https://wiki.scrappey.com)
+- **Request Builder**: [https://app.scrappey.com/#/builder](https://app.scrappey.com/#/builder)
+- **GitHub**: [https://github.com/pim97/scrappey.js](https://github.com/pim97/scrappey.js)
+- **NPM**: [https://www.npmjs.com/package/scrappey-wrapper](https://www.npmjs.com/package/scrappey-wrapper)
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Additional Tags
+## Disclaimer
 
-cloudflare anti bot bypass, cloudflare solver, scraper, scraping, cloudflare scraper, cloudflare turnstile solver, turnstile solver, data extraction, web scraping, website scraping, data scraping, scraping tool, API scraping, scraping solution, web data extraction, website data extraction, web scraping library, website scraping library, cloudflare bypass, scraping API, web scraping API, cloudflare protection, data scraping tool, scraping service, cloudflare challenge solver, web scraping solution, web scraping service, cloudflare scraping, cloudflare bot protection, scraping framework, scraping library, cloudflare bypass tool, cloudflare anti-bot, cloudflare protection bypass, cloudflare solver tool, web scraping tool, data extraction library, website scraping tool, cloudflare turnstile bypass, cloudflare anti-bot solver, turnstile solver tool, cloudflare scraping solution, website data scraper, cloudflare challenge bypass, web scraping framework, cloudflare challenge solver tool, web data scraping, data scraper, scraping data from websites, SEO, data mining, data harvesting, data crawling, web scraping software, website scraping tool, web scraping framework, data extraction tool, web data scraper, data scraping service, scraping automation, scraping tutorial, scraping code, scraping techniques, scraping best practices, scraping scripts, scraping tutorial, scraping examples, scraping challenges, scraping tricks, scraping tips, scraping tricks, scraping strategies, scraping methods, cloudflare protection bypass, cloudflare security bypass, web scraping Python, web scraping JavaScript, web scraping PHP, web scraping Ruby, web scraping Java, web scraping C#, web scraping Node.js, web scraping BeautifulSoup, web scraping Selenium, web scraping Scrapy, web scraping Puppeteer, web scraping requests, web scraping headless browser, web scraping dynamic content, web scraping AJAX, web scraping pagination, web scraping authentication, web scraping cookies, web scraping session management, web scraping data parsing, web scraping data cleaning, web scraping data analysis, web scraping data visualization, web scraping legal issues, web scraping ethics, web scraping compliance, web scraping regulations, web scraping IP blocking, web scraping anti-scraping measures, web scraping proxy, web scraping CAPTCHA solving, web scraping IP rotation, web scraping rate limiting, web scraping data privacy, web scraping consent, web scraping terms of service, web scraping robots.txt, web scraping data storage, web scraping database integration, web scraping data integration, web scraping API integration, web scraping data export, web scraping data processing, web scraping data transformation, web scraping data enrichment, web scraping data validation, web scraping error handling, web scraping scalability, web scraping performance optimization, web scraping distributed scraping, web scraping cloud-based scraping, web scraping serverless scraping, akamai, datadome, perimetex, shape, kasada, queue-it, incapsula.
+Please ensure that your web scraping activities comply with the website's terms of service and legal regulations. Scrappey is not responsible for any misuse or unethical use of the library. Use it responsibly and respect the website's policies.
