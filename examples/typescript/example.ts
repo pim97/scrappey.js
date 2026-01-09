@@ -4,7 +4,7 @@
  * This example demonstrates how to use the Scrappey API from TypeScript.
  *
  * Prerequisites:
- *   npm install scrappey typescript ts-node @types/node
+ *   npm install @scrappey/api typescript ts-node @types/node
  *
  * Run:
  *   npx ts-node example.ts
@@ -12,7 +12,7 @@
  * Get your API key at: https://scrappey.com
  */
 
-import Scrappey = require('scrappey');
+import Scrappey = require('@scrappey/api');
 
 const API_KEY: string = process.env.SCRAPPEY_API_KEY || 'YOUR_API_KEY_HERE';
 

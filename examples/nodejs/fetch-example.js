@@ -6,7 +6,7 @@
  */
 
 // Instead of: const fetch = require('node-fetch');
-const fetch = require('scrappey/fetch');
+const fetch = require('@scrappey/api/fetch');
 
 const API_KEY = process.env.SCRAPPEY_API_KEY || 'YOUR_API_KEY_HERE';
 
