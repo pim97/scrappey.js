@@ -4,12 +4,12 @@
  * This example demonstrates how to use the Scrappey API from Node.js.
  *
  * Prerequisites:
- *   npm install scrappey-wrapper
+ *   npm install scrappey
  *
  * Get your API key at: https://scrappey.com
  */
 
-const Scrappey = require('scrappey-wrapper');
+const Scrappey = require('scrappey');
 
 const API_KEY = process.env.SCRAPPEY_API_KEY || 'YOUR_API_KEY_HERE';
 

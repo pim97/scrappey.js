@@ -6,7 +6,7 @@
  */
 
 // Instead of: const axios = require('axios');
-const axios = require('scrappey-wrapper/axios');
+const axios = require('scrappey/axios');
 
 const API_KEY = process.env.SCRAPPEY_API_KEY || 'YOUR_API_KEY_HERE';
 
