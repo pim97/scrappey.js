@@ -1,4 +1,4 @@
-# Scrappey - Web Scraping API Wrapper 
+# Scrappey - Web Scraping API Wrapper  
 
 The official Node.js wrapper for the [Scrappey](https://scrappey.com) web scraping API. Bypass Cloudflare, Datadome, PerimeterX, and other antibot protections. Solve captchas automatically.
 
