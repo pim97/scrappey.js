@@ -5,7 +5,7 @@ The official Node.js wrapper for the [Scrappey](https://scrappey.com) web scrapi
 [![npm version](https://badge.fury.io/js/scrappey-wrapper.svg)](https://www.npmjs.com/package/scrappey-wrapper)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-> **Responsible use:** This wrapper is intended for collecting publicly available data in compliance with applicable laws and each target site's Terms of Service and `robots.txt`. Confirm you have the right to access and use the data, use reasonable request volumes, and respect privacy regulations (e.g. GDPR/CCPA). See the [Disclaimer](#disclaimer).
+> **Responsible use:** This wrapper is intended for collecting publicly available data in compliance with applicable laws. See the [Disclaimer](#disclaimer).
 
 ## Features
 
