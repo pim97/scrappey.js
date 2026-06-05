@@ -9,8 +9,6 @@ The official Node.js wrapper for the [Scrappey](https://scrappey.com) web scrapi
 
 ## Features
 
-- **Protected-page rendering**: Cloudflare, Datadome, PerimeterX, Kasada, Akamai, and more
-- **Captcha handling**: Automatic reCAPTCHA, hCaptcha, Turnstile, and FunCaptcha solving
 - **Browser automation**: Full browser actions (click, type, scroll, execute JS)
 - **Session management**: Persistent sessions with cookie and state management
 - **All HTTP methods**: GET, POST, PUT, DELETE, PATCH
