@@ -1,6 +1,6 @@
 # Scrappey — Web Scraping API Wrapper
 
-The official Node.js wrapper for the [Scrappey](https://scrappey.com) web scraping API. Render and retrieve pages protected by antibot systems (Cloudflare, Datadome, PerimeterX, and others) and handle captchas automatically — all through a single API.
+The official Node.js wrapper for the [Scrappey](https://scrappey.com) web scraping API. Render and retrieve fully-loaded web pages, run browser automation, and handle captchas — all through a single API.
 
 [![npm version](https://badge.fury.io/js/scrappey-wrapper.svg)](https://www.npmjs.com/package/scrappey-wrapper)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -13,25 +13,18 @@ The official Node.js wrapper for the [Scrappey](https://scrappey.com) web scrapi
 - **Session management**: Persistent sessions with cookie and state management
 - **All HTTP methods**: GET, POST, PUT, DELETE, PATCH
 - **Proxy support**: Built-in residential proxies with country selection
+- **Captcha handling**: Automatic captcha solving
 - **Screenshots & video**: Capture screenshots and record browser sessions
 - **TypeScript support**: Full TypeScript declarations included
 
-## Pricing Comparison
+## Pricing
 
-| Features | Scrappey | ZenRows | ScrapingBee | Scrapfly |
-|----------|----------|---------|-------------|----------|
-| **Price per 1K Requests**<br/>(JS Render + Residential Proxies) | **€1** | $25 | $25 | $187 |
-| **Concurrent Requests** | **200** | 10 | 5 | 5 |
-| **Browser Automation** | **30+ Actions** | Basic | Basic | Basic |
-| **Billing Model** | **Pay-as-you-go** | Monthly | Monthly | Monthly |
-| **Success Rate** | **95%** | 95% | 95% | 95% |
+Scrappey uses simple, pay-as-you-go pricing:
 
-**Why Scrappey?**
-- **25x cheaper** than competitors for JS rendering with residential proxies
-- **20x more concurrent requests** for faster collection
-- **Most advanced browser automation** with 30+ actions
-- **Flexible billing** — pay only for what you use, no monthly commitments
-- **Same high success rate** as premium competitors
+- **From €1 per 1,000 requests** (JS rendering + residential proxies)
+- **Up to 200 concurrent requests** out of the box
+- **30+ browser automation actions**
+- **No monthly commitment** — pay only for what you use
 
 ## How It Works
 
@@ -46,15 +39,12 @@ flowchart TB
     
     subgraph ScrappeyAPI[Scrappey API]
         RequestHandler[Request Handler]
-        AntibotEngine[Antibot Engine]
         CaptchaSolver[Captcha Solver]
         BrowserEngine[Browser Engine]
         ProxyManager[Proxy Manager]
     end
     
     subgraph TargetSite[Target Website]
-        Cloudflare[Cloudflare Protection]
-        Datadome[Datadome Protection]
         Captcha[CAPTCHA Challenge]
         Website[Website Content]
     end
@@ -62,33 +52,28 @@ flowchart TB
     Code -->|1. Send Request| Wrapper
     Wrapper -->|2. API Request| RequestHandler
     
-    RequestHandler -->|3. Route Request| AntibotEngine
-    AntibotEngine -->|4. Handle Protection| Cloudflare
-    AntibotEngine -->|4. Handle Protection| Datadome
+    RequestHandler -->|3. Handle Captcha| CaptchaSolver
+    CaptchaSolver -->|4. Solve Automatically| Captcha
     
-    RequestHandler -->|5. Handle Captcha| CaptchaSolver
-    CaptchaSolver -->|6. Solve Automatically| Captcha
+    RequestHandler -->|5. Execute| BrowserEngine
+    BrowserEngine -->|6. Use Proxy| ProxyManager
+    ProxyManager -->|7. Residential IP| Website
     
-    RequestHandler -->|7. Execute| BrowserEngine
-    BrowserEngine -->|8. Use Proxy| ProxyManager
-    ProxyManager -->|9. Residential IP| Website
-    
-    Website -->|10. Return Content| BrowserEngine
-    BrowserEngine -->|11. Process Response| RequestHandler
-    RequestHandler -->|12. Return Data| Wrapper
-    Wrapper -->|13. Formatted Response| Code
+    Website -->|8. Return Content| BrowserEngine
+    BrowserEngine -->|9. Process Response| RequestHandler
+    RequestHandler -->|10. Return Data| Wrapper
+    Wrapper -->|11. Formatted Response| Code
 ```
 
 ### Request Flow
 
 1. **Your code** sends a request through the Scrappey wrapper
 2. **Scrappey API** receives and processes the request
-3. **Antibot engine** handles Cloudflare, Datadome, PerimeterX, etc.
-4. **Captcha solver** detects and solves CAPTCHAs automatically
-5. **Browser engine** executes browser actions if needed (click, type, scroll)
-6. **Proxy manager** routes through residential proxies
-7. **Target website** returns content
-8. **Response** is formatted and returned to your application
+3. **Captcha solver** detects and solves captchas automatically
+4. **Browser engine** executes browser actions if needed (click, type, scroll)
+5. **Proxy manager** routes through residential proxies
+6. **Target website** returns content
+7. **Response** is formatted and returned to your application
 
 ### Use Cases
 
@@ -128,7 +113,7 @@ Scrappey supports two request modes:
 
 | Mode | Description | Cost | Best For |
 |------|-------------|------|----------|
-| `browser` | Headless browser (default) | 1 + 0.2 balance/request | Complex pages, JS rendering, browser actions, protected pages |
+| `browser` | Headless browser (default) | 1 + 0.2 balance/request | Complex pages, JS rendering, browser actions |
 | `request` | HTTP library with TLS | 0.2 balance/request | Simple requests, speed-critical, cost-sensitive applications |
 
 ### Using Browser Mode (Default)
@@ -165,13 +150,12 @@ const response = await scrappey.get({
 
 **Use `browser` mode for:**
 - Sites with JavaScript-rendered content
-- Complex protection systems (Cloudflare, Datadome, etc.)
 - Browser actions (click, type, scroll)
 - Captcha solving
 
 ## Drop-in Replacement for Axios/Fetch
 
-**New in v2.0.0**: Use Scrappey as a drop-in replacement for axios or fetch. Change your import and all requests automatically route through Scrappey, with protected-page rendering, captcha solving, and proxy support.
+**New in v2.0.0**: Use Scrappey as a drop-in replacement for axios or fetch. Change your import and all requests automatically route through Scrappey, with rendering, captcha solving, and proxy support.
 
 ### Axios Drop-in
 
@@ -216,8 +200,7 @@ const response = await axios.get('https://example.com', {
 });
 
 // Scrappey-specific options also work
-const response = await axios.get('https://protected-site.com', {
-    cloudflareBypass: true,
+const response = await axios.get('https://example.com', {
     premiumProxy: true,
     automaticallySolveCaptchas: true
 });
@@ -245,9 +228,7 @@ const data = await response.json();
 import fetch from 'scrappey-wrapper/fetch';
 fetch.configure({ apiKey: 'YOUR_API_KEY' });
 
-const response = await fetch('https://example.com', {
-    cloudflareBypass: true
-});
+const response = await fetch('https://example.com');
 const data = await response.json();
 ```
 
@@ -298,14 +279,12 @@ import axios from 'scrappey-wrapper/axios';
 
 // Set defaults
 axios.defaults.apiKey = 'YOUR_API_KEY';
-axios.defaults.cloudflareBypass = true;
 axios.defaults.premiumProxy = true;
 axios.defaults.timeout = 60000;
 
 // Or create a custom instance
 const scrappeyAxios = axios.create({
     apiKey: 'YOUR_API_KEY',
-    cloudflareBypass: true,
     premiumProxy: true
 });
 ```
@@ -317,7 +296,6 @@ import fetch from 'scrappey-wrapper/fetch';
 
 fetch.configure({
     apiKey: 'YOUR_API_KEY',
-    cloudflareBypass: true,
     premiumProxy: true,
     timeout: 60000
 });
@@ -335,7 +313,6 @@ All standard axios/fetch options are supported:
 - `responseType: 'json'` → uses `innerText` for JSON
 
 Plus Scrappey-specific options:
-- `cloudflareBypass`, `datadomeBypass`, `kasadaBypass`
 - `automaticallySolveCaptchas`, `alwaysLoad`
 - `browserActions`, `screenshot`, `video`
 - `session`, `premiumProxy`, `proxyCountry`
@@ -483,26 +460,13 @@ console.log(response.solution.javascriptReturn[0]);
 | `while` | Loop actions |
 | `solve_captcha` | Solve a captcha |
 
-### Protected-Page Options
-
-```javascript
-const response = await scrappey.get({
-    url: 'https://protected-site.com',
-    datadomeBypass: true,
-    kasadaBypass: true,
-    premiumProxy: true,
-    proxyCountry: 'UnitedStates'
-});
-```
-
 ### Captcha Solving
 
 ```javascript
 // Automatic captcha solving
 const response = await scrappey.get({
     url: 'https://example.com',
-    automaticallySolveCaptchas: true,
-    alwaysLoad: ['recaptcha', 'hcaptcha', 'turnstile']
+    automaticallySolveCaptchas: true
 });
 
 // Manual captcha solving with a browser action
@@ -511,10 +475,9 @@ const response = await scrappey.get({
     browserActions: [
         {
             type: 'solve_captcha',
-            captcha: 'turnstile',
             captchaData: {
-                sitekey: '0x4AAAAAAA...',
-                cssSelector: '.cf-turnstile'
+                sitekey: 'SITE_KEY_HERE',
+                cssSelector: '.captcha-widget'
             }
         }
     ]
@@ -579,9 +542,6 @@ console.log(response.solution.interceptFetchRequestResponse);
 | `cookiejar` | `array` | Cookie jar array |
 | `localStorage` | `object` | LocalStorage data to set |
 | `browserActions` | `array` | Browser actions to execute |
-| `cloudflareBypass` | `boolean` | Handle Cloudflare-protected pages |
-| `datadomeBypass` | `boolean` | Handle Datadome-protected pages |
-| `kasadaBypass` | `boolean` | Handle Kasada-protected pages |
 | `automaticallySolveCaptchas` | `boolean` | Auto-solve captchas |
 | `cssSelector` | `string` | Extract content by CSS selector |
 | `innerText` | `boolean` | Include page text content |
@@ -671,11 +631,11 @@ console.log(response.solution.statusCode); // Fully typed
 ## For AI / LLM Agents
 
 - **Package:** `scrappey-wrapper` (Node.js); install via `npm install scrappey-wrapper`.
-- **Purpose:** Send HTTP requests through the Scrappey API to render and retrieve pages, including those behind antibot protection, and to solve captchas.
+- **Purpose:** Send HTTP requests through the Scrappey API to render and retrieve web pages, run browser automation, and solve captchas.
 - **Auth:** API key passed to `new Scrappey('YOUR_API_KEY')`, or `axios.defaults.apiKey` / `fetch.configure({ apiKey })` for the drop-in adapters.
 - **Core call:** `await scrappey.get({ url })` → returns `response.solution.response` (HTML) and `response.solution.statusCode`.
 - **Modes:** `requestType: 'browser'` (default, full rendering) or `'request'` (HTTP+TLS, cheaper/faster).
-- **Key options:** `cloudflareBypass`, `datadomeBypass`, `kasadaBypass`, `automaticallySolveCaptchas`, `browserActions`, `session`, `premiumProxy`, `proxyCountry`, `screenshot`, `cssSelector`.
+- **Key options:** `automaticallySolveCaptchas`, `browserActions`, `session`, `premiumProxy`, `proxyCountry`, `screenshot`, `cssSelector`.
 - **Drop-in adapters:** `scrappey-wrapper/axios` and `scrappey-wrapper/fetch` mirror the axios/fetch APIs.
 - **Docs:** https://wiki.scrappey.com
 - **Intended use:** Collecting publicly available data in line with applicable law and each target site's Terms of Service.
