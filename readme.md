@@ -1,6 +1,6 @@
 # Scrappey — Web Scraping API Wrapper
 
-The official Node.js wrapper for the [Scrappey](https://scrappey.com) web scraping API. Render and retrieve fully-loaded web pages, run browser automation, and handle captchas — all through a single API.
+The official Node.js wrapper for the [Scrappey](https://scrappey.com) web scraping API. Render and retrieve fully-loaded web pages, run browser automation
 
 [![npm version](https://badge.fury.io/js/scrappey-wrapper.svg)](https://www.npmjs.com/package/scrappey-wrapper)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -13,7 +13,6 @@ The official Node.js wrapper for the [Scrappey](https://scrappey.com) web scrapi
 - **Session management**: Persistent sessions with cookie and state management
 - **All HTTP methods**: GET, POST, PUT, DELETE, PATCH
 - **Proxy support**: Built-in residential proxies with country selection
-- **Captcha handling**: Automatic captcha solving
 - **Screenshots & video**: Capture screenshots and record browser sessions
 - **TypeScript support**: Full TypeScript declarations included
 
@@ -28,7 +27,7 @@ Scrappey uses simple, pay-as-you-go pricing:
 
 ## How It Works
 
-Scrappey handles the infrastructure of page rendering, captcha solving, proxy routing, and session management behind a single API:
+Scrappey handles the infrastructure of page rendering, proxy routing, and session management behind a single API:
 
 ```mermaid
 flowchart TB
@@ -39,21 +38,16 @@ flowchart TB
     
     subgraph ScrappeyAPI[Scrappey API]
         RequestHandler[Request Handler]
-        CaptchaSolver[Captcha Solver]
         BrowserEngine[Browser Engine]
         ProxyManager[Proxy Manager]
     end
     
     subgraph TargetSite[Target Website]
-        Captcha[CAPTCHA Challenge]
         Website[Website Content]
     end
     
     Code -->|1. Send Request| Wrapper
     Wrapper -->|2. API Request| RequestHandler
-    
-    RequestHandler -->|3. Handle Captcha| CaptchaSolver
-    CaptchaSolver -->|4. Solve Automatically| Captcha
     
     RequestHandler -->|5. Execute| BrowserEngine
     BrowserEngine -->|6. Use Proxy| ProxyManager
@@ -69,7 +63,6 @@ flowchart TB
 
 1. **Your code** sends a request through the Scrappey wrapper
 2. **Scrappey API** receives and processes the request
-3. **Captcha solver** detects and solves captchas automatically
 4. **Browser engine** executes browser actions if needed (click, type, scroll)
 5. **Proxy manager** routes through residential proxies
 6. **Target website** returns content
@@ -151,11 +144,10 @@ const response = await scrappey.get({
 **Use `browser` mode for:**
 - Sites with JavaScript-rendered content
 - Browser actions (click, type, scroll)
-- Captcha solving
 
 ## Drop-in Replacement for Axios/Fetch
 
-**New in v2.0.0**: Use Scrappey as a drop-in replacement for axios or fetch. Change your import and all requests automatically route through Scrappey, with rendering, captcha solving, and proxy support.
+**New in v2.0.0**: Use Scrappey as a drop-in replacement for axios or fetch. Change your import and all requests automatically route through Scrappey, with rendering, and proxy support.
 
 ### Axios Drop-in
 
@@ -197,12 +189,6 @@ const response = await axios.get('https://example.com', {
     proxy: 'http://proxy:port',
     cookies: 'session=abc123',
     responseType: 'json'
-});
-
-// Scrappey-specific options also work
-const response = await axios.get('https://example.com', {
-    premiumProxy: true,
-    automaticallySolveCaptchas: true
 });
 ```
 
@@ -313,7 +299,6 @@ All standard axios/fetch options are supported:
 - `responseType: 'json'` → uses `innerText` for JSON
 
 Plus Scrappey-specific options:
-- `automaticallySolveCaptchas`, `alwaysLoad`
 - `browserActions`, `screenshot`, `video`
 - `session`, `premiumProxy`, `proxyCountry`
 - And many more
@@ -458,31 +443,6 @@ console.log(response.solution.javascriptReturn[0]);
 | `set_viewport` | Set viewport size |
 | `if` | Conditional actions |
 | `while` | Loop actions |
-| `solve_captcha` | Solve a captcha |
-
-### Captcha Solving
-
-```javascript
-// Automatic captcha solving
-const response = await scrappey.get({
-    url: 'https://example.com',
-    automaticallySolveCaptchas: true
-});
-
-// Manual captcha solving with a browser action
-const response = await scrappey.get({
-    url: 'https://example.com',
-    browserActions: [
-        {
-            type: 'solve_captcha',
-            captchaData: {
-                sitekey: 'SITE_KEY_HERE',
-                cssSelector: '.captcha-widget'
-            }
-        }
-    ]
-});
-```
 
 ### Screenshots & Video
 
@@ -542,7 +502,6 @@ console.log(response.solution.interceptFetchRequestResponse);
 | `cookiejar` | `array` | Cookie jar array |
 | `localStorage` | `object` | LocalStorage data to set |
 | `browserActions` | `array` | Browser actions to execute |
-| `automaticallySolveCaptchas` | `boolean` | Auto-solve captchas |
 | `cssSelector` | `string` | Extract content by CSS selector |
 | `innerText` | `boolean` | Include page text content |
 | `includeLinks` | `boolean` | Include all page links |
@@ -631,11 +590,11 @@ console.log(response.solution.statusCode); // Fully typed
 ## For AI / LLM Agents
 
 - **Package:** `scrappey-wrapper` (Node.js); install via `npm install scrappey-wrapper`.
-- **Purpose:** Send HTTP requests through the Scrappey API to render and retrieve web pages, run browser automation, and solve captchas.
+- **Purpose:** Send HTTP requests through the Scrappey API to render and retrieve web pages, run browser automation
 - **Auth:** API key passed to `new Scrappey('YOUR_API_KEY')`, or `axios.defaults.apiKey` / `fetch.configure({ apiKey })` for the drop-in adapters.
 - **Core call:** `await scrappey.get({ url })` → returns `response.solution.response` (HTML) and `response.solution.statusCode`.
 - **Modes:** `requestType: 'browser'` (default, full rendering) or `'request'` (HTTP+TLS, cheaper/faster).
-- **Key options:** `automaticallySolveCaptchas`, `browserActions`, `session`, `premiumProxy`, `proxyCountry`, `screenshot`, `cssSelector`.
+- **Key options:** `browserActions`, `session`, `premiumProxy`, `proxyCountry`, `screenshot`, `cssSelector`.
 - **Drop-in adapters:** `scrappey-wrapper/axios` and `scrappey-wrapper/fetch` mirror the axios/fetch APIs.
 - **Docs:** https://wiki.scrappey.com
 - **Intended use:** Collecting publicly available data in line with applicable law and each target site's Terms of Service.
