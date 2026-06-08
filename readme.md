@@ -1,4 +1,4 @@
-# Scrappey — Web Scraping API Wrapper
+# Scrappey — Web Scraping API Wrapper 
 
 The official Node.js client for the [Scrappey](https://scrappey.com) web scraping API. Render and retrieve fully-loaded web pages, run browser automation, manage persistent sessions, and route requests through residential proxies — all behind a single, typed API.
 
