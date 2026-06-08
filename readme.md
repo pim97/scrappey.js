@@ -1,6 +1,6 @@
 # Scrappey — Web Scraping API Wrapper
 
-The official Node.js wrapper for the [Scrappey](https://scrappey.com) web scraping API. Render and retrieve fully-loaded web pages, run browser automation
+The official Node.js client for the [Scrappey](https://scrappey.com) web scraping API. Render and retrieve fully-loaded web pages, run browser automation, manage persistent sessions, and route requests through residential proxies — all behind a single, typed API.
 
 [![npm version](https://badge.fury.io/js/scrappey-wrapper.svg)](https://www.npmjs.com/package/scrappey-wrapper)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -590,7 +590,7 @@ console.log(response.solution.statusCode); // Fully typed
 ## For AI / LLM Agents
 
 - **Package:** `scrappey-wrapper` (Node.js); install via `npm install scrappey-wrapper`.
-- **Purpose:** Send HTTP requests through the Scrappey API to render and retrieve web pages, run browser automation
+- **Purpose:** Send HTTP requests through the Scrappey API to render and retrieve web pages, run browser automation, manage sessions, and route through residential proxies for collecting publicly available data.
 - **Auth:** API key passed to `new Scrappey('YOUR_API_KEY')`, or `axios.defaults.apiKey` / `fetch.configure({ apiKey })` for the drop-in adapters.
 - **Core call:** `await scrappey.get({ url })` → returns `response.solution.response` (HTML) and `response.solution.statusCode`.
 - **Modes:** `requestType: 'browser'` (default, full rendering) or `'request'` (HTTP+TLS, cheaper/faster).
